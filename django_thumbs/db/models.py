@@ -78,9 +78,7 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
                     except Exception:
                         if settings.DEBUG:
                             raise
-            urlBase, extension = self.url.rsplit('.', 1)
-            thumb_url = self.THUMB_SUFFIX % (urlBase, size[0], size[1], extension)
-            return thumb_url
+            return self.storage.url(thumb_file)
 
     def __getattr__(self, name):
         """Return the url for the requested size.
