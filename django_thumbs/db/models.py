@@ -20,25 +20,29 @@ except ImportError:
     import Image, ImageOps
 
 
-def generate_thumb(original, size, format='JPEG'):
+def generate_thumb(original, size, preserve_ratio, format='JPEG'):
     """
     Generates a thumbnail image and returns a ContentFile object with the thumbnail
 
     Arguments:
-    original -- The image being resized as `File`.
-    size     -- Desired thumbnail size as `tuple`. Example: (70, 100)
-    format   -- Format of the original image ('JPEG', 'PNG', ...) The thumbnail will be generated using this same format.
+    original        -- The image being resized as `File`.
+    size            -- Desired thumbnail size as `tuple`. Example: (70, 100)
+    preserve_ratio  -- True if the thumbnail is to keep the aspect ratio of the full image
+    format          -- Format of the original image ('JPEG', 'PNG', ...) The thumbnail will be generated using this same format.
 
     """
     original.seek(0)  # see http://code.djangoproject.com/ticket/8222 for details
     image = Image.open(original)
     if image.mode not in ('L', 'RGB', 'RGBA'):
         image = image.convert('RGB')
-    thumbnail = ImageOps.fit(image, size, Image.ANTIALIAS)
+    if preserve_ratio:
+        image.thumbnail(size, Image.ANTIALIAS)
+    else:
+        image = ImageOps.fit(image, size, Image.ANTIALIAS)
     io = cStringIO.StringIO()
     if format.upper() == 'JPG':
         format = 'JPEG'
-    thumbnail.save(io, format)
+    image.save(io, format)
     return ContentFile(io.getvalue())
 
 
@@ -114,7 +118,7 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
         """
         base, extension = self.name.rsplit('.', 1)
         thumb_name = self.THUMB_SUFFIX % (base, size[0], size[1], extension)
-        thumbnail = generate_thumb(image, size, extension)
+        thumbnail = generate_thumb(image, size, self.field.preserve_ratio, extension)
         saved_as = self.storage.save(thumb_name, thumbnail)
         if thumb_name != saved_as:
             raise ValueError('There is already a file named %s' % thumb_name)
@@ -223,10 +227,11 @@ class ImageWithThumbsField(ImageField):
     """
     attr_class = ImageWithThumbsFieldFile
 
-    def __init__(self, verbose_name=None, name=None, width_field=None, height_field=None, sizes=None, **kwargs):
+    def __init__(self, verbose_name=None, name=None, width_field=None, height_field=None, sizes=None, preserve_ratio=False, **kwargs):
         self.verbose_name = verbose_name
         self.name = name
         self.width_field = width_field
         self.height_field = height_field
         self.sizes = sizes
+        self.preserve_ratio = preserve_ratio
         super(ImageField, self).__init__(**kwargs)
