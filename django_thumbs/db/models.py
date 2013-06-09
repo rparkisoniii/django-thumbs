@@ -75,11 +75,9 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
                 if not self.storage.exists(thumb_file):
                     try:
                         self._generate_thumb(self.storage.open(self.name), size)
-                    except:
+                    except Exception:
                         if settings.DEBUG:
-                            import sys
-                            print "Exception generating thumbnail"
-                            print sys.exc_info()
+                            raise
             urlBase, extension = self.url.rsplit('.', 1)
             thumb_url = self.THUMB_SUFFIX % (urlBase, size[0], size[1], extension)
             return thumb_url
@@ -130,11 +128,9 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
                 for size in self.field.sizes:
                     try:
                         self._generate_thumb(content, size)
-                    except:
+                    except Exception:
                         if settings.DEBUG:
-                            import sys
-                            print "Exception generating thumbnail"
-                            print sys.exc_info()
+                            raise
 
     def delete(self, save=True):
         if self.name and self.field.sizes:
@@ -143,11 +139,9 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
                 thumb_name = self.THUMB_SUFFIX % (base, size[0], size[1], extension)
                 try:
                     self.storage.delete(thumb_name)
-                except:
+                except Exception:
                     if settings.DEBUG:
-                        import sys
-                        print "Exception deleting thumbnails"
-                        print sys.exc_info()
+                        raise
         super(ImageFieldFile, self).delete(save)
 
     def generate_thumbnails(self):
@@ -157,11 +151,9 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
             for size in self.field.sizes:
                 try:
                     self._generate_thumb(self.storage.open(self.name), size)
-                except:
+                except Exception:
                     if settings.DEBUG:
-                        import sys
-                        print "Exception generating thumbnail"
-                        print sys.exc_info()
+                        raise
 
     def thumbnail(self, widthOrSize, height=None):
         """
