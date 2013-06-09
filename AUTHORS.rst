@@ -1,13 +1,13 @@
 
-
 Original author
 ===============
- 
+
  * Antonio Melé <antonio.mele@gmail.com>
 
- 
+
 Contributors
 ============
 
- * Julian Romero <julian@wuonm.com>
  * Alexis Couronne <alexis.couronne@scopart.fr>
+ * Jerome Leclanche <jerome.leclanche+django@gmail.com>
+ * Julian Romero <julian@wuonm.com>
