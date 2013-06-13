@@ -225,3 +225,11 @@ class ImageWithThumbsField(ImageField):
         self.sizes = sizes
         self.preserve_ratio = preserve_ratio
         super(ImageField, self).__init__(**kwargs)
+
+
+try:
+    from south.modelsinspector import add_introspection_rules
+except ImportError:
+    pass
+else:
+    add_introspection_rules([], ["^django_thumbs\.db\.models\.ImageWithThumbsField"])
