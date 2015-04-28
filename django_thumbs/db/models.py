@@ -218,13 +218,13 @@ class ImageWithThumbsField(ImageField):
     attr_class = ImageWithThumbsFieldFile
 
     def __init__(self, verbose_name=None, name=None, width_field=None, height_field=None, sizes=None, preserve_ratio=False, **kwargs):
+        super(ImageField, self).__init__(**kwargs)
         self.verbose_name = verbose_name
         self.name = name
         self.width_field = width_field
         self.height_field = height_field
         self.sizes = sizes
         self.preserve_ratio = preserve_ratio
-        super(ImageField, self).__init__(**kwargs)
 
 
 try:
