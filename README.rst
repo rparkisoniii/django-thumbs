@@ -4,7 +4,7 @@ On this Fork
 This fork actually limits some of the features for django-thumbs. the pip install I found was
 not python3 compatible which this is (the source on github is mostly compatible with python3). The changes I made were
 reasonably minor but effectively this version does away with all settings that can be used in a settings.py file.
-Additionally I switched from using cStringIo to io to make it python3 compatible as I found out cStringio is no longer supported by ptyhon3. Their is a very minor imporvement here with thumbnail lookup as it shortcircuits the loop when it finds a match. Finally variables are now pep8 compliant.
+Additionally I switched from using cStringIo to io to make it python3 compatible as I found out cStringio is no longer supported by python3. Their is a very minor imporvement here with thumbnail lookup as it shortcircuits the loop when it finds a match. Finally variables are now pep8 compliant.
 
 
 =============
