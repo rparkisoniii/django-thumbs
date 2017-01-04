@@ -1,3 +1,13 @@
+============
+On this Fork
+============
+This fork actually limits some of the features for django-thumbs. the pip install I found was
+not python3 compatible which this is (the source on github is however). The changes I made were
+reasonably minor but effectively this version does away with all settings talked about below
+additionally I switched from using cStringIo to io because I didn't see a point in using cString
+finally I did a minor performance improvement with finding correct sizes.
+
+
 =============
 Django-thumbs
 =============
