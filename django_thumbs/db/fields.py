@@ -1,3 +1,7 @@
+""" Used as a model field to generate thumbnail images along with
+    the source image
+"""
+
 import io
 from django.conf import settings
 from django.core.files.base import ContentFile
@@ -50,8 +54,8 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
             return ''
         else:
             # generate missing thumbnail if needed
-            fileBase, extension = self.name.rsplit('.', 1)
-            thumb_file = self.THUMB_SUFFIX % (fileBase, size[0], size[1], extension)
+            file_base, extension = self.name.rsplit('.', 1)
+            thumb_file = self.THUMB_SUFFIX % (file_base, size[0], size[1], extension)
             if not self.storage.exists(thumb_file):
                 try:
                     self._generate_thumb(self.storage.open(self.name), size)
@@ -67,17 +71,17 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
         """
         if "url_" not in name:
             return getattr(super(ImageFieldFile), name)
-        sizeStr = name.replace("url_", "")
-        width, height = sizeStr.split("x")
-        requestedSize = (int(width), int(height))
-        acceptedSize = None
-        for configuredSize in self.field.sizes:
-            if requestedSize == configuredSize:
-                acceptedSize = requestedSize
+        size_str = name.replace("url_", "")
+        width, height = size_str.split("x")
+        requested_size = (int(width), int(height))
+        accepted_size = None
+        for configured_size in self.field.sizes:
+            if requested_size == configured_size:
+                accepted_size = requested_size
                 break
-        if acceptedSize is not None:
-            return self._url_for_size(acceptedSize)
-        raise ValueError("The requested thumbnail size %s doesn't exist" % sizeStr)
+        if accepted_size is not None:
+            return self._url_for_size(accepted_size)
+        raise ValueError("The requested thumbnail size %s doesn't exist" % size_str)
 
     def _generate_thumb(self, image, size):
         """Generates a thumbnail of `size`.
